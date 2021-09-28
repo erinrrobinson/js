@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Poetry Generator</title>
+    <style>
+      #title {font-family: monospace; font-size: x-large; font-weight: 600;}
+      #textarea { border: 1px solid #888; resize: none; font-family: monospace; font-weight: 600;padding: 24px 24px;}
+      #textarea2 { border: 1px solid #888; resize: none; font-family: monospace; font-weight: 600;padding: 24px 24px;}
+      #submitButton {border-radius: 12px; padding: 12px 24px; transition-duration: 0.4s;}
+      #submitButton:hover {background-color: #4CAF50; color: white;}
+      #retryButton {border-radius: 12px; padding: 12px 24px; transition-duration: 0.4s;}
+      #retryButton:hover {background-color: #4CAF50; /* Green */
+  color: white;}
+      #finishButton {border-radius: 12px; padding: 12px 24px; transition-duration: 0.4s;}
+      #finishButton:hover {background-color: #4CAF50; /* Green */
+  color: white;}
+    </style>
+  </head>
+  <body>
+    <h1 id="title">Poetry Generator</h1>
+    <textarea name="poemeditor" id="textarea" cols="80" rows="15" placeholder="Enter the start of your poem here..." ></textarea>
+    <textarea name="keyword" id="textarea2" cols="40" rows="1" placeholder="Enter keyword here..." ></textarea>
+    <button id="submitButton">Send to AI</button>
+    <button id="retryButton">Retry</button>
+    <button id="finishButton">Submit to Installation</button>
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
+    
+      // var form = document.getElementById('form');
+      // var input = document.getElementById('input');
+
+      var textField = document.getElementById('textarea');
+      var submitButton = document.getElementById('submitButton');
+      var retryButton = document.getElementById('retryButton');
+      var finishButton = document.getElementById('finishButton');
+      var keyword = document.getElementById('textarea2')
+
+      // var textField = document.createElement('textarea');
+      // textField.rows = 6;
+      // textField.cols = 80;
+      // var submitButton = document.createElement('button');
+      // submitButton.innerHTML = 'Send to AI';
+      // var retryButton = document.createElement('button');
+      // retryButton.innerHTML = 'Retry';
+      // var finishButton = document.createElement('button');
+      // finishButton.innerHTML = 'Submit to Installation';
+      document.body.appendChild(textField);
+      document.body.appendChild(submitButton);
+      document.body.appendChild(retryButton);
+      document.body.appendChild(finishButton);
+      document.body.appendChild(keyword)
+
+
+      //leave this one alone, for sending to server
+      submitButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (textField.value) {
+          socket.emit('chat message', textField.value);
+          textField.value = '';
+        }
+      });
+
+      retryButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (textField.value) {
+          socket.emit('retry', textField.value);
+          textField.value = '';
+        }
+      });
+
+      finishButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (textField.value) {
+          socket.emit('finish', textField.value);
+          textField.value = '';
+        }
+      });
+
+      finishButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (keyword.value) {
+          socket.emit('keyword', keyword.value);
+          keyword.value = '';
+        }
+      });
+
+    //   socket.on('chat message', function(msg) {
+    // var item = document.createElement('li');
+    // item.textContent = msg;
+    // messages.appendChild(item);
+    // window.scrollTo(0, document.body.scrollHeight);
+
+    socket.on('chat message', function(msg) {
+    textField.textContent = msg;
+    textField.value = msg;
+    // window.scrollTo(0, document.body.scrollHeight);
+
+  });
+    </script>
+  </body>
+</html>
