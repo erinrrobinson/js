@@ -23,6 +23,7 @@
     <button id="submitButton">Send to AI</button>
     <button id="retryButton">Retry</button>
     <button id="finishButton">Submit to Installation</button>
+    
     <script src="http://localhost:3000/socket.io/socket.io.js"></script>
     <script>
       var socket = io();
@@ -80,7 +81,7 @@
       finishButton.addEventListener('click', function(e) {
         e.preventDefault();
         if (keyword.value) {
-          socket.emit('keyword', keyword.value);
+          socket.emit('keywords', keyword.value);
           keyword.value = '';
         }
       });
